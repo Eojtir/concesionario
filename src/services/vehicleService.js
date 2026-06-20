@@ -4,7 +4,7 @@ const vehicleService = {
   // Obtener uno solo por ID
   getById: async (id) => {
     const response = await api.get(`/api_vehicles/?id=${id}`);
-    return response.data;
+    return response.data.data;
   },
   // Obtener todos los vehículos
   getAll: async () => {

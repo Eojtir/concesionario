@@ -3,12 +3,12 @@ import api from './api';
 const lotService = {
   getAll: async () => {
     const response = await api.get('/api_lots/');
-    return response.data.data;
+    return response.data;
   },
 
   getById: async (id) => {
     const response = await api.get(`/api_lots/?id=${id}`);
-    return response.data;
+    return response.data.data;
   },
 
   create: async (data) => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import lotService from "../../services/lotService";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const LotForm = () => {
   const navigate = useNavigate();
@@ -29,13 +30,16 @@ const LotForm = () => {
     setLoading(true);
     try {
       if (isEditMode) {
-        await lotService.update(id, formData);
+        const response = await lotService.update(id, formData);
+        toast.success(response.message);
       } else {
-        await lotService.create(formData);
+        const response = await lotService.create(formData);
+        toast.success(response.message);
       }
       navigate("/lots"); // Volver a la lista de lotes
     } catch (err) {
       setError("Error guardando el lote");
+      toast.error(err);
     } finally {
       setLoading(false);
     }
@@ -43,14 +47,23 @@ const LotForm = () => {
 
   return (
     <div className="max-w-lg mx-auto bg-white p-8 rounded shadow mt-10">
-      <h2 className="text-2xl font-bold mb-6">
-        {isEditMode ? "Editar Lote" : "Crear Nuevo Lote"}
-      </h2>
-      {error && (
-        <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>
-      )}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-2xl p-6 shadow-lg">
+        <h2 className="text-2xl font-bold mb-6 text-white">
+          {isEditMode ? "Editar Lote" : "Crear Nuevo Lote"}
+        </h2>
+        <p className="text-blue-100 mt-1">
+          {isEditMode
+            ? `Actualizando información de ${formData.name || ""} `
+            : "Añade un nuevo vehículo a tu inventario"}
+        </p>
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">
+            {error}
+          </div>
+        )}
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 mt-5">
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Nombre de la Sucursal
